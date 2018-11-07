@@ -25,6 +25,8 @@ RUN a2enmod rewrite \
   && docker-php-ext-install memcached \
   # Clean up
   && rm /tmp/memcached.tar.gz \
-	&& apt-get clean && rm -rf /var/lib/apt/lists/*
+	&& apt-get clean && rm -rf /var/lib/apt/lists/* \
+  # Configure Apache web docroot
+  && sed -i 's/\/var\/www\/html/\/var\/www\/html\/docroot/g' /etc/apache2/sites-available/000-default.conf
 
 COPY config/php.ini /usr/local/etc/php/conf.d/
