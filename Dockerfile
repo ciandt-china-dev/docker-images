@@ -30,3 +30,12 @@ RUN a2enmod rewrite \
   && sed -i 's/\/var\/www\/html/\/var\/www\/html\/docroot/g' /etc/apache2/sites-available/000-default.conf
 
 COPY config/php.ini /usr/local/etc/php/conf.d/
+
+# Add default user `docker` and modify user id and group id
+RUN groupadd -r -g 1001 docker && useradd --no-log-init -r -u 1000 -g docker docker \
+  && echo '#!/bin/bash\nset -e\n\
+[[ $(id -u docker) != ${CURRENT_USER_UID:-1000} ]] && usermod -u ${CURRENT_USER_UID:-1000} docker\n\
+[[ $(id -g docker) != ${CURRENT_USER_GID:-1001} ]] && groupmod -g ${CURRENT_USER_GID:-1001} docker\n\
+chown -R docker:docker /var/www/html\napache2-foreground' > /start.sh && chmod 755 /start.sh
+
+CMD ["/start.sh"]
