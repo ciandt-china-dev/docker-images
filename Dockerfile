@@ -14,8 +14,9 @@ RUN a2enmod rewrite \
       libxml2-dev \
       nano \
       libmemcached-dev \
+      rsyslog \
 	&& docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
-	&& docker-php-ext-install gd pdo pdo_mysql pdo_pgsql zip opcache \
+	&& docker-php-ext-install gd pdo pdo_mysql pdo_pgsql zip opcache sockets \
   # Install Memcached PHP extension
   && curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/v$MEMCACHED_VERSION.tar.gz" \
   && mkdir -p /usr/src/php/ext/memcached \
@@ -30,11 +31,15 @@ RUN a2enmod rewrite \
 
 COPY config/php.ini /usr/local/etc/php/conf.d/
 
+COPY config/rsyslog.conf /etc/rsyslog.conf
+
 # Add default user `docker` and modify user id and group id
 RUN groupadd -r -g 1001 docker && useradd --no-log-init -r -u 1000 -g docker docker \
   && echo '#!/bin/bash\nset -e\n\
 [[ $(id -u docker) != ${CURRENT_USER_UID:-1000} ]] && usermod -u ${CURRENT_USER_UID:-1000} docker\n\
 [[ $(id -g docker) != ${CURRENT_USER_GID:-1001} ]] && groupmod -g ${CURRENT_USER_GID:-1001} docker\n\
-chown -R docker:docker /var/www/html\napache2-foreground' > /start.sh && chmod 755 /start.sh
+chown -R docker:docker /var/www/html\n\
+nohup rsyslogd -n -f /etc/rsyslog.conf &\n\
+apache2-foreground' > /start.sh && chmod 755 /start.sh
 
 CMD ["/start.sh"]
