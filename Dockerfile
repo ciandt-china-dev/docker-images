@@ -17,7 +17,7 @@ RUN a2enmod rewrite \
       libmemcached-dev \
       rsyslog \
 	&& docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
-	&& docker-php-ext-install gd pdo pdo_mysql pdo_pgsql zip opcache sockets \
+	&& docker-php-ext-install gd pdo pdo_mysql pdo_pgsql zip opcache sockets soap \
   # Install Memcached PHP extension
   && curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/v$MEMCACHED_VERSION.tar.gz" \
   && mkdir -p /usr/src/php/ext/memcached \
