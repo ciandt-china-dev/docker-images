@@ -29,7 +29,11 @@ RUN a2enmod rewrite \
   && rm /tmp/memcached.tar.gz \
 	&& apt-get clean && rm -rf /var/lib/apt/lists/* \
   # Configure Apache web docroot
-  && sed -i 's/\/var\/www\/html/\/var\/www\/html\/docroot/g' /etc/apache2/sites-available/000-default.conf
+  && sed -i 's/\/var\/www\/html/\/var\/www\/html\/docroot/g' /etc/apache2/sites-available/000-default.conf \
+  # Remove old Apache ServerTokens & ServerSignature
+  && sed -i "/^ServerTokens/d; /^ServerSignature/d" /etc/apache2/apache2.conf \
+  # Add new Apache ServerTokens & ServerSignature
+  && echo 'ServerTokens Prod\nServerSignature Off' >> /etc/apache2/apache2.conf
 
 COPY config/php.ini /usr/local/etc/php/conf.d/
 
