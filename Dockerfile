@@ -49,7 +49,7 @@ RUN groupadd -r -g 1001 docker && useradd --no-log-init -r -u 1000 -g docker doc
 [[ $(id -g docker) != ${CURRENT_USER_GID:-1001} ]] && groupmod -g ${CURRENT_USER_GID:-1001} docker\n\
 chown -R docker:docker /var/www/html\n\
 nohup rsyslogd -n -f /etc/rsyslog.conf &\n\
-apache2-foreground' > /start.sh && chmod 755 /start.sh
+apache2-foreground' > /start.sh && chmod 755 /start.sh \
   # Install Drush
   && mkdir -p /usr/local/drush \
   && curl -fsSL -o /usr/local/drush/drush "https://github.com/drush-ops/drush/releases/download/$DRUSH_VERSION/drush.phar" \
