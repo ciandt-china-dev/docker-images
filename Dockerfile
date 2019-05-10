@@ -1,6 +1,6 @@
 FROM php:7.1-apache
 
-LABEL maintainer="jason@ciandt.com"
+LABEL maintainer="yechaozheng@ciandt.com"
 
 ENV DRUSH_VERSION 8.1.18
 ENV DRUSH_LAUNCHER_VERSION 0.6.0
@@ -11,6 +11,8 @@ ENV MEMCACHED_VERSION 3.0.4
 # Drupal 7 PHP requirement: https://www.drupal.org/docs/7/system-requirements/drupal-7-php-requirements#extensions
 # Drupal 8 PHP requirement: https://www.drupal.org/docs/8/system-requirements/php-requirements
 RUN a2enmod rewrite \
+  #Install nodejs
+  && curl -sL https://deb.nodesource.com/setup_11.x | bash - \
   && apt-get update && apt-get install -y --no-install-recommends \
       mysql-client \
       libpng-dev \
@@ -20,8 +22,17 @@ RUN a2enmod rewrite \
       nano \
       libmemcached-dev \
       rsyslog \
+      libbz2-dev \
+      git \
+      zip \
+      unzip \
+      nodejs \
+      openssh-client \
+      python-dev \
 	&& docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
-	&& docker-php-ext-install gd pdo pdo_mysql pdo_pgsql zip opcache sockets soap \
+	&& docker-php-ext-install gd pdo pdo_mysql pdo_pgsql zip opcache sockets soap bz2 mysqli \
+  # Install Composer
+  && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
   # Install Memcached PHP extension
   && curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/v$MEMCACHED_VERSION.tar.gz" \
   && mkdir -p /usr/src/php/ext/memcached \
