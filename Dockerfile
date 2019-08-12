@@ -12,7 +12,7 @@ ENV MEMCACHED_VERSION 3.0.4
 # Drupal 8 PHP requirement: https://www.drupal.org/docs/8/system-requirements/php-requirements
 RUN a2enmod rewrite \
   && apt-get update && apt-get install -y --no-install-recommends \
-      mysql-client \
+      mariadb-client \
       libpng-dev \
       libjpeg-dev \
       libpq-dev \
