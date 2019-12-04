@@ -14,7 +14,8 @@ Standalone Apache/PHP container with necessary packages and extensions installed
 - Installed with memcached and it's PHP extension
 - Installed sockets PHP extension for varnish module
 - Installed rsyslog server for drupal core syslog module(Default redirect all output to /dev/stdout. You can mount your custom rsyslog.conf file to customize.)
-
+- Installed git zip nodejs openssh-client python-dev and composer which Acquia BLT need.
+ 
 ## Reference
 **Maintained by**:
 [CI&T China DevOps Team](https://www.ciandt.com.cn)
