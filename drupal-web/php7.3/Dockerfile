@@ -13,7 +13,8 @@ RUN a2enmod rewrite \
   && apt-get update && apt-get install -y --no-install-recommends \
       mariadb-client \
       libpng-dev \
-      libjpeg-dev \
+      libjpeg62-turbo-dev \
+      libfreetype6-dev \
       libpq-dev \
       libxml2-dev \
       nano \
@@ -23,9 +24,11 @@ RUN a2enmod rewrite \
       libzip-dev \
       libmagickwand-dev \
 	&& docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
+    --with-freetype-dir=/usr \
+  && docker-php-ext-install -j "$(nproc)" gd \
   && docker-php-ext-configure zip --with-libzip \
   && docker-php-ext-install zip \
-	&& docker-php-ext-install gd pdo pdo_mysql pdo_pgsql zip opcache sockets soap \
+	&& docker-php-ext-install pdo pdo_mysql pdo_pgsql zip opcache sockets soap \
   # Install Memcached PHP extension
   && curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/v$MEMCACHED_VERSION.tar.gz" \
   && mkdir -p /usr/src/php/ext/memcached \
@@ -61,7 +64,7 @@ apache2-foreground' > /start.sh && chmod 755 /start.sh \
   # Install Drush
   && mkdir -p /usr/local/drush \
   && curl -fsSL -o /usr/local/drush/drush "https://github.com/drush-ops/drush/releases/download/$DRUSH_VERSION/drush.phar" \
-  && curl -fsSL -o /usr/local/bin/drush https://github.com/drush-ops/drush-launcher/releases/download/${DRUSH_LAUNCHER_VERSION}/drush.phar \    
+  && curl -fsSL -o /usr/local/bin/drush https://github.com/drush-ops/drush-launcher/releases/download/${DRUSH_LAUNCHER_VERSION}/drush.phar \
   && chmod +x /usr/local/drush/drush /usr/local/bin/drush \
   && drush --version
 
