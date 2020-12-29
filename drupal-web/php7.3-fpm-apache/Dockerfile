@@ -89,7 +89,8 @@ RUN a2enmod proxy proxy_fcgi
 # PHP files should be handled by PHP, and should be preferred over any other file type
 RUN { \
 		echo '<FilesMatch \.php$>'; \
-		echo '\tSetHandler "proxy:fcgi://127.0.0.1:9000"'; \
+#		echo '\tSetHandler "proxy:fcgi://127.0.0.1:9000"'; \
+		echo '\tSetHandler "proxy:unix:/var/run/php7.3-fpm.sock|fcgi://localhost/"'; \
 		echo '</FilesMatch>'; \
 		echo; \
 		echo 'DirectoryIndex disabled'; \
@@ -307,7 +308,9 @@ RUN set -eux; \
 		echo 'daemonize = no'; \
 		echo; \
 		echo '[www]'; \
-		echo 'listen = 9000'; \
+#	    echo 'listen = 9000'; \
+		echo 'listen = /var/run/php7.3-fpm.sock'; \
+		echo 'listen.mode = 0666'; \
 	} | tee php-fpm.d/zz-docker.conf
 
 # Override stop signal to stop process gracefully
@@ -334,12 +337,14 @@ RUN a2enmod rewrite \
       rsyslog \
       zip \
       libzip-dev \
+      libbz2-dev \
       libmagickwand-dev \
 	&& docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
     --with-freetype-dir=/usr \
   && docker-php-ext-install -j "$(nproc)" gd \
   && docker-php-ext-configure zip --with-libzip \
   && docker-php-ext-install zip \
+  && docker-php-ext-install bz2 \
 	&& docker-php-ext-install pdo pdo_mysql pdo_pgsql zip opcache sockets soap \
   # Install Memcached PHP extension
   && curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/v$MEMCACHED_VERSION.tar.gz" \
@@ -364,6 +369,11 @@ COPY config/rsyslog.conf /etc/rsyslog.conf
 # Install imagick
 RUN printf "\n" | pecl install imagick
 RUN docker-php-ext-enable imagick
+
+# Install apcu
+RUN printf "\n" | pecl install apcu
+RUN docker-php-ext-enable apcu
+RUN pecl clear-cache
 
 # Add default user `docker` and modify user id and group id
 RUN groupadd -r -g 1001 docker && useradd --no-log-init -r -u 1000 -g docker docker \
