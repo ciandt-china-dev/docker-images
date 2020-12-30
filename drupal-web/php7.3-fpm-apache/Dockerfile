@@ -33,13 +33,15 @@ RUN set -eux; \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
+RUN groupadd -r -g 1001 docker && useradd --no-log-init -r -u 1000 -g docker docker
+
 ENV PHP_INI_DIR /usr/local/etc/php
 RUN set -eux; \
 	mkdir -p "$PHP_INI_DIR/conf.d"; \
 # allow running as an arbitrary user (https://github.com/docker-library/php/issues/743)
 	[ ! -d /var/www/html ]; \
 	mkdir -p /var/www/html; \
-	chown www-data:www-data /var/www/html; \
+	chown docker:docker /var/www/html; \
 	chmod 777 /var/www/html
 
 # Install apache2
@@ -105,7 +107,7 @@ RUN { \
 
 ENV PHP_EXTRA_BUILD_DEPS apache2-dev
 #ENV PHP_EXTRA_CONFIGURE_ARGS --with-apxs2 --disable-cgi
-ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --disable-cgi
+ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=docker --with-fpm-group=docker --disable-cgi
 
 # Apply stack smash protection to functions using local buffers and alloca()
 # Make PHP's main executable position-independent (improves ASLR security mechanism, and has no performance impact on x86_64)
@@ -376,8 +378,7 @@ RUN docker-php-ext-enable apcu
 RUN pecl clear-cache
 
 # Add default user `docker` and modify user id and group id
-RUN groupadd -r -g 1001 docker && useradd --no-log-init -r -u 1000 -g docker docker \
-  && echo '#!/bin/bash\nset -e\n\
+RUN echo '#!/bin/bash\nset -e\n\
 [[ $(id -u docker) != ${CURRENT_USER_UID:-1000} ]] && usermod -u ${CURRENT_USER_UID:-1000} docker\n\
 [[ $(id -g docker) != ${CURRENT_USER_GID:-1001} ]] && groupmod -g ${CURRENT_USER_GID:-1001} docker\n\
 chown -R docker:docker /var/www/html\n\
