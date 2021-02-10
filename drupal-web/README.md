@@ -2,7 +2,9 @@
 Standalone Apache/PHP container with necessary packages and extensions installed for Drupal
 
 ## Supported tags and respective `Dockerfile` links
--	[`7.2`, `latest` (*Dockerfile*)](https://github.com/ciandt-china-dev/docker-drupal-web/blob/master/php7.2/Dockerfile)
+-	[`7.4`, `latest` (*Dockerfile*)](https://github.com/ciandt-china-dev/docker-drupal-web/blob/master/php7.4/Dockerfile)
+-	[`7.3` (*Dockerfile*)](https://github.com/ciandt-china-dev/docker-drupal-web/blob/master/php7.3/Dockerfile)
+-	[`7.2` (*Dockerfile*)](https://github.com/ciandt-china-dev/docker-drupal-web/blob/master/php7.2/Dockerfile)
 -	[`7.1` (*Dockerfile*)](https://github.com/ciandt-china-dev/docker-drupal-web/blob/master/php7.1/Dockerfile)
 
 ## The purpose of this container image
