@@ -86,7 +86,7 @@ RUN set -eux; \
 
 # Apache + PHP requires preforking Apache for best results
 RUN a2enmod mpm_event && a2dismod mpm_prefork
-RUN a2enmod proxy proxy_fcgi
+RUN a2enmod proxy proxy_fcgi proxy_http
 
 # PHP files should be handled by PHP, and should be preferred over any other file type
 RUN { \
