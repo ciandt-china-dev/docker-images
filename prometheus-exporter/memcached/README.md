@@ -10,6 +10,6 @@ docker-composer example:
         image: quay.io/prometheus/memcached-exporter:latest
         ports:
             - "9150:9150"
-        command: ["--memcached.address", "${PROJECT_KEY}-memcached"]
+        command: ["--memcached.address", "memcached"]
         depends_on:
             - memcached
