@@ -1,4 +1,18 @@
-FROM alpine:latest
+FROM golang:1.16 as build
+
+ENV TAG_TO_BUILD="1.6"
+
+WORKDIR /
+
+RUN git clone --depth 1 --branch ${TAG_TO_BUILD} https://github.com/jonnenauha/prometheus_varnish_exporter.git
+
+WORKDIR /prometheus_varnish_exporter
+
+RUN go build
+
+
+
+FROM alpine:3.7
 
 LABEL   maintainer="ceniym@ciandt.com"
 
@@ -6,7 +20,7 @@ LABEL   maintainer="ceniym@ciandt.com"
 # exec user process caused "no such file or directory"
 RUN apk add --no-cache docker libc6-compat
 
-COPY prometheus_varnish_exporter /bin/prometheus_varnish_exporter
+COPY --from=build /prometheus_varnish_exporter/prometheus_varnish_exporter /bin/prometheus_varnish_exporter
 
 EXPOSE 9131
 
