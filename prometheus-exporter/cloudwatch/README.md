@@ -1,15 +1,14 @@
 
 
-# Docker version for Apache exporter for Prometheus
+# Docker version for Cloudwatch exporter for Prometheus
 
-Github: [prometheus_apache_exporter](https://github.com/Lusitaniae/apache_exporter)
+Github: [prometheus_cloudwatch_exporter](https://github.com/prometheus/cloudwatch_exporter)
 
 docker-composer example:
 
-    exporter:
-        image:  bitnami/apache-exporter:latest
-        ports:
-            - "9117:9117"
-        command: ["--scrape_uri='http://web-server/server-status?auto'"]
-        depends_on:
-            - web-server
+    aws_cloudwatch_exporter:
+        image: prom/cloudwatch-exporter
+            ports:
+                - "9106:9106"
+            volumes:
+                - ./config.yml:/config/config.yml
