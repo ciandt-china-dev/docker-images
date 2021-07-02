@@ -1,0 +1,5 @@
+requests
+configparser
+pytest
+pytest-schema
+allure-pytest
