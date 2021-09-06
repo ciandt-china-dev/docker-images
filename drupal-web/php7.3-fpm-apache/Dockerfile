@@ -30,8 +30,7 @@ RUN set -eux; \
 		ca-certificates \
 		curl \
 		xz-utils \
-	; \
-	rm -rf /var/lib/apt/lists/*
+		exim4;
 
 RUN groupadd -r -g 1001 docker && useradd --no-log-init -r -u 1000 -g docker docker
 
@@ -49,9 +48,7 @@ ENV APACHE_CONFDIR /etc/apache2
 ENV APACHE_ENVVARS $APACHE_CONFDIR/envvars
 
 RUN set -eux; \
-	apt-get update; \
 	apt-get install -y --no-install-recommends apache2; \
-	rm -rf /var/lib/apt/lists/*; \
 	\
 # generically convert lines like
 #   export APACHE_RUN_USER=www-data
@@ -121,9 +118,9 @@ ENV PHP_LDFLAGS="-Wl,-O1 -pie"
 
 ENV GPG_KEYS CBAF69F173A0FEA4B537F470D66C9593118BCCB6 F38252826ACD957EF380D39F2F7956BC5DA04B5D
 
-ENV PHP_VERSION 7.3.25
-ENV PHP_URL="https://www.php.net/distributions/php-7.3.25.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-7.3.25.tar.xz.asc"
-ENV PHP_SHA256="c71c00ad03079efb78d1a6b8623ca4f725be697dbd9a46debacbcc9a2475f329"
+ENV PHP_VERSION 7.3.30
+ENV PHP_URL="https://www.php.net/distributions/php-7.3.30.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-7.3.30.tar.xz.asc"
+ENV PHP_SHA256="0ebfd656df0f3b1ea37ff2887f8f2d1a71cd160fb0292547c0ee0a99e58ffd1b"
 
 RUN set -eux; \
 	\
@@ -145,7 +142,7 @@ RUN set -eux; \
 		curl -fsSL -o php.tar.xz.asc "$PHP_ASC_URL"; \
 		export GNUPGHOME="$(mktemp -d)"; \
 		for key in $GPG_KEYS; do \
-			gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+			gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
 		done; \
 		gpg --batch --verify php.tar.xz.asc php.tar.xz; \
 		gpgconf --kill all; \
@@ -383,6 +380,7 @@ RUN echo '#!/bin/bash\nset -e\n\
 [[ $(id -g docker) != ${CURRENT_USER_GID:-1001} ]] && groupmod -g ${CURRENT_USER_GID:-1001} docker\n\
 chown -R docker:docker /var/www/html\n\
 nohup rsyslogd -n -f /etc/rsyslog.conf &\n\
+service exim4 start\n\
 php-fpm -D\n\
 apache2-foreground' > /start.sh && chmod 755 /start.sh \
   # Install Drush
