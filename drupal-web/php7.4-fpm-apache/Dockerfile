@@ -320,9 +320,7 @@ RUN set -eux; \
 # https://github.com/php/php-src/blob/17baa87faddc2550def3ae7314236826bc1b1398/sapi/fpm/php-fpm.8.in#L163
 STOPSIGNAL SIGQUIT
 
-ENV DRUSH_VERSION 8.4.8
-ENV DRUSH_LAUNCHER_VERSION 0.9.1
-ENV DRUSH_LAUNCHER_FALLBACK "/usr/local/drush/drush"
+ENV DRUSH_VERSION 10.3.6
 ENV MEMCACHED_VERSION 3.1.5
 
 # Install necessary packages and PHP extensions for both Drupal 8
@@ -377,6 +375,20 @@ RUN printf "\n" | pecl install apcu
 RUN docker-php-ext-enable apcu
 RUN pecl clear-cache
 
+# Register the COMPOSER_HOME environment variable
+ENV COMPOSER_HOME /composer
+
+# Add global binary directory to PATH and make sure to re-export it
+ENV PATH /composer/vendor/bin:$PATH
+
+# Allow Composer to be run as root
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN composer global require drush/drush:$DRUSH_VERSION
+
 # Add default user `docker` and modify user id and group id
 RUN echo '#!/bin/bash\nset -e\n\
 [[ $(id -u docker) != ${CURRENT_USER_UID:-1000} ]] && usermod -u ${CURRENT_USER_UID:-1000} docker\n\
@@ -386,11 +398,6 @@ nohup rsyslogd -n -f /etc/rsyslog.conf &\n\
 service exim4 start\n\
 php-fpm -D\n\
 apache2-foreground' > /start.sh && chmod 755 /start.sh \
-  # Install Drush
-  && mkdir -p /usr/local/drush \
-  && curl -fsSL -o /usr/local/drush/drush "https://github.com/drush-ops/drush/releases/download/$DRUSH_VERSION/drush.phar" \
-  && curl -fsSL -o /usr/local/bin/drush https://github.com/drush-ops/drush-launcher/releases/download/${DRUSH_LAUNCHER_VERSION}/drush.phar \
-  && chmod +x /usr/local/drush/drush /usr/local/bin/drush \
   && drush --version
 
 EXPOSE 80
