@@ -88,8 +88,8 @@ RUN a2enmod proxy proxy_fcgi proxy_http
 # PHP files should be handled by PHP, and should be preferred over any other file type
 RUN { \
 		echo '<FilesMatch \.php$>'; \
-#		echo '\tSetHandler "proxy:fcgi://127.0.0.1:9000"'; \
-		echo '\tSetHandler "proxy:unix:/var/run/php7.4-fpm.sock|fcgi://localhost/"'; \
+		echo '\tSetHandler "proxy:fcgi://127.0.0.1:9000"'; \
+#	echo '\tSetHandler "proxy:unix:/var/run/php7.4-fpm.sock|fcgi://localhost/"'; \
 		echo '</FilesMatch>'; \
 		echo; \
 		echo 'DirectoryIndex disabled'; \
@@ -118,9 +118,9 @@ ENV PHP_LDFLAGS="-Wl,-O1 -pie"
 
 ENV GPG_KEYS 42670A7FE4D0441C8E4632349E4FDC074A4EF02D 5A52880781F755608BF815FC910DEB46F53EA312
 
-ENV PHP_VERSION 7.4.23
-ENV PHP_URL="https://www.php.net/distributions/php-7.4.23.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-7.4.23.tar.xz.asc"
-ENV PHP_SHA256="cea52313fcffe56343bcd3c66dbb23cd5507dc559cc2e3547cf8f5452e88a05d"
+ENV PHP_VERSION 7.4.27
+ENV PHP_URL="https://www.php.net/distributions/php-7.4.27.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-7.4.27.tar.xz.asc"
+ENV PHP_SHA256="3f8b937310f155822752229c2c2feb8cc2621e25a728e7b94d0d74c128c43d0c"
 
 RUN set -eux; \
 	\
@@ -311,8 +311,8 @@ RUN set -eux; \
 		echo 'daemonize = no'; \
 		echo; \
 		echo '[www]'; \
-#	    echo 'listen = 9000'; \
-		echo 'listen = /var/run/php7.4-fpm.sock'; \
+	        echo 'listen = 9000'; \
+#	echo 'listen = /var/run/php7.4-fpm.sock'; \
 		echo 'listen.mode = 0666'; \
 	} | tee php-fpm.d/zz-docker.conf
 
