@@ -377,6 +377,17 @@ RUN printf "\n" | pecl install apcu
 RUN docker-php-ext-enable apcu
 RUN pecl clear-cache
 
+# Install new relic agent
+RUN curl -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/newrelic-php5-9.20.0.310-linux.tar.gz \
+  && gzip -dc newrelic.tar.gz | tar xf - \
+  && cd newrelic-php5-9.20.0.310-linux \
+  && NR_INSTALL_USE_CP_NOT_LN=1 NR_INSTALL_SILENT=1 ./newrelic-install install \
+  && rm -rf ../newrelic-php5-9.20.0.310-linux newrelic.tar.gz \
+  && sed -i \
+           -e 's/;newrelic.enabled =.*/newrelic.enabled = false/' \
+           -e 's/;newrelic.daemon.dont_launch =.*/newrelic.daemon.dont_launch = 3/' \
+           /usr/local/etc/php/conf.d/newrelic.ini
+
 # Add default user `docker` and modify user id and group id
 RUN echo '#!/bin/bash\nset -e\n\
 [[ $(id -u docker) != ${CURRENT_USER_UID:-1000} ]] && usermod -u ${CURRENT_USER_UID:-1000} docker\n\
