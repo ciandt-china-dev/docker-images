@@ -43,7 +43,7 @@ RUN cd /tmp \
   && make install \
   && ldconfig
 
-FROM    varnish:6.6.2
+FROM    varnish:6.5.1-1
 
 LABEL   maintainer="ceniym@ciandt.com"
 
