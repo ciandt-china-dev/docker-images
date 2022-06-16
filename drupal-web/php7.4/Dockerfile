@@ -59,7 +59,6 @@ RUN groupadd -r -g 1001 docker && useradd --no-log-init -r -u 1000 -g docker doc
   && echo '#!/bin/bash\nset -e\n\
 [[ $(id -u docker) != ${CURRENT_USER_UID:-1000} ]] && usermod -u ${CURRENT_USER_UID:-1000} docker\n\
 [[ $(id -g docker) != ${CURRENT_USER_GID:-1001} ]] && groupmod -g ${CURRENT_USER_GID:-1001} docker\n\
-chown -R docker:docker /var/www/html\n\
 nohup rsyslogd -n -f /etc/rsyslog.conf &\n\
 apache2-foreground' > /start.sh && chmod 755 /start.sh \
   # Install Drush
