@@ -116,11 +116,11 @@ ENV PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_
 ENV PHP_CPPFLAGS="$PHP_CFLAGS"
 ENV PHP_LDFLAGS="-Wl,-O1 -pie"
 
-ENV GPG_KEYS 528995BFEDFBA7191D46839EF9BA0ADA31CBD89E 39B641343D8C104B2B146DC3F9C39DC0B9698544 F1F692238FBC1666E5A5CCD4199F9DFEF6FFBAFD
+ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 BFDDD28642824F8118EF77909B67A5C12229118F
 
 ENV PHP_VERSION 8.0.20
 ENV PHP_URL="https://www.php.net/distributions/php-8.0.20.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-8.0.20.tar.xz.asc"
-ENV PHP_SHA256="7e21fd985966264194cde63503b57fd0f0170b32a39bd7af2384c1071b50f164"
+ENV PHP_SHA256="973fec765336ee01f47536a5db1c2eee98df9d34a41522b7b6c760159bf0a77b"
 
 RUN set -eux; \
 	\
@@ -392,11 +392,11 @@ RUN docker-php-ext-enable apcu
 RUN pecl clear-cache
 
 # Install new relic agent
-RUN curl -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/newrelic-php5-9.20.0.310-linux.tar.gz \
+RUN curl -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/newrelic-php5-10.0.0.312-linux.tar.gz \
   && gzip -dc newrelic.tar.gz | tar xf - \
-  && cd newrelic-php5-9.20.0.310-linux \
+  && cd newrelic-php5-10.0.0.312-linux \
   && NR_INSTALL_USE_CP_NOT_LN=1 NR_INSTALL_SILENT=1 ./newrelic-install install \
-  && rm -rf ../newrelic-php5-9.20.0.310-linux newrelic.tar.gz \
+  && rm -rf ../newrelic-php5-10.0.0.312-linux newrelic.tar.gz \
   && sed -i \
            -e 's/;newrelic.enabled =.*/newrelic.enabled = false/' \
            -e 's/;newrelic.daemon.dont_launch =.*/newrelic.daemon.dont_launch = 3/' \
