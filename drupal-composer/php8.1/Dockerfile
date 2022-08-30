@@ -1,4 +1,4 @@
-FROM composer:2.0.14
+FROM composer:2.3.10
 
 LABEL maintainer="jason@ciandt.com"
 
