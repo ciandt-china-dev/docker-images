@@ -24,6 +24,7 @@ RUN a2enmod rewrite \
       zip \
       libzip-dev \
       libmagickwand-dev \
+      imagemagick \
 	&& docker-php-ext-configure gd --with-jpeg=/usr \
     --with-freetype=/usr \
   && docker-php-ext-install -j "$(nproc)" gd \
