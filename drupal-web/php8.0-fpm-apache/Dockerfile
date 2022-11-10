@@ -356,7 +356,8 @@ RUN a2enmod rewrite \
       libzip-dev \
       libbz2-dev \
       libmagickwand-dev \
-	&& docker-php-ext-configure gd --with-freetype --with-jpeg\
+      libwebp-dev \
+	&& docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp\
   && docker-php-ext-install -j "$(nproc)" gd \
   && docker-php-ext-configure zip \
   && docker-php-ext-install zip \
@@ -392,11 +393,11 @@ RUN docker-php-ext-enable apcu
 RUN pecl clear-cache
 
 # Install new relic agent
-RUN curl -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/newrelic-php5-10.0.0.312-linux.tar.gz \
+RUN curl -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/newrelic-php5-10.3.0.315-linux.tar.gz \
   && gzip -dc newrelic.tar.gz | tar xf - \
-  && cd newrelic-php5-10.0.0.312-linux \
+  && cd newrelic-php5-10.3.0.315-linux \
   && NR_INSTALL_USE_CP_NOT_LN=1 NR_INSTALL_SILENT=1 ./newrelic-install install \
-  && rm -rf ../newrelic-php5-10.0.0.312-linux newrelic.tar.gz \
+  && rm -rf ../newrelic-php5-10.3.0.315-linux newrelic.tar.gz \
   && sed -i \
            -e 's/;newrelic.enabled =.*/newrelic.enabled = false/' \
            -e 's/;newrelic.daemon.dont_launch =.*/newrelic.daemon.dont_launch = 3/' \
