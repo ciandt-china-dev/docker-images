@@ -378,11 +378,11 @@ RUN docker-php-ext-enable apcu
 RUN pecl clear-cache
 
 # Install new relic agent
-RUN curl -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/newrelic-php5-9.20.0.310-linux.tar.gz \
+RUN curl -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/newrelic-php5-10.4.0.316-linux.tar.gz \
   && gzip -dc newrelic.tar.gz | tar xf - \
-  && cd newrelic-php5-9.20.0.310-linux \
+  && cd newrelic-php5-10.4.0.316-linux \
   && NR_INSTALL_USE_CP_NOT_LN=1 NR_INSTALL_SILENT=1 ./newrelic-install install \
-  && rm -rf ../newrelic-php5-9.20.0.310-linux newrelic.tar.gz \
+  && rm -rf ../newrelic-php5-10.4.0.316-linux newrelic.tar.gz \
   && sed -i \
            -e 's/;newrelic.enabled =.*/newrelic.enabled = false/' \
            -e 's/;newrelic.daemon.dont_launch =.*/newrelic.daemon.dont_launch = 3/' \
