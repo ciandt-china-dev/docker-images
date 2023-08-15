@@ -363,6 +363,9 @@ RUN a2enmod rewrite \
   && docker-php-ext-install zip \
   && docker-php-ext-install bz2 \
 	&& docker-php-ext-install pdo pdo_mysql pdo_pgsql zip opcache sockets soap \
+	# Install Intl PHP extension
+	&& docker-php-ext-configure intl \
+	&& docker-php-ext-install intl \
   # Install Memcached PHP extension
   && curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/v$MEMCACHED_VERSION.tar.gz" \
   && mkdir -p /usr/src/php/ext/memcached \
