@@ -11,7 +11,8 @@ RUN pip3 install --root-user-action=ignore \
       boto3 \
       botocore \
       kubernetes \
-      kubernetes-validate
+      kubernetes-validate \
+      python-dotenv
 
 # kubectl.
 # https://github.com/lachie83/k8s-kubectl/blob/main/Dockerfile
