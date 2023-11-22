@@ -1,6 +1,10 @@
+FROM moby/buildkit:latest as buildkit
 FROM docker:latest
 
 LABEL maintainer="kang@ciandt.com"
+
+COPY --from=buildkit /usr/bin/buildctl* /usr/local/bin/
+COPY --from=buildkit /usr/bin/buildkit* /usr/local/bin/
 
 RUN apk add --no-cache python3 py3-pip curl
 
