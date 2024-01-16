@@ -1,4 +1,5 @@
 FROM moby/buildkit:latest as buildkit
+
 FROM docker:latest
 
 LABEL maintainer="kang@ciandt.com"
