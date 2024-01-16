@@ -7,9 +7,12 @@ LABEL maintainer="kang@ciandt.com"
 COPY --from=buildkit /usr/bin/buildctl* /usr/local/bin/
 COPY --from=buildkit /usr/bin/buildkit* /usr/local/bin/
 
-RUN apk add --no-cache python3 py3-pip curl
+RUN apk update && \
+    apk upgrade --no-cache && \
+    apk add --no-cache curl gcc libc-dev libffi-dev python3-dev python3 py3-pip
 
 # python packages.
+RUN pip3 config set global.break-system-packages true
 RUN pip3 install --root-user-action=ignore \
       awscli \
       ansible \
