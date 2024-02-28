@@ -387,7 +387,16 @@ COPY config/php.ini /usr/local/etc/php/conf.d/
 COPY config/rsyslog.conf /etc/rsyslog.conf
 
 # Install imagick
-RUN printf "\n" | pecl install imagick
+# RUN printf "\n" | pecl install imagick
+# Imagick manual compatibility with PHP 8.3
+RUN curl -L -o /tmp/imagick.tar.gz https://github.com/Imagick/imagick/archive/7088edc353f53c4bc644573a79cdcd67a726ae16.tar.gz \
+    && tar --strip-components=1 -xf /tmp/imagick.tar.gz \
+    && phpize \
+    && ./configure \
+    && make \
+    && make install \
+    && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/ext-imagick.ini \
+    && rm -rf /tmp/* \
 RUN docker-php-ext-enable imagick
 
 # Install apcu
