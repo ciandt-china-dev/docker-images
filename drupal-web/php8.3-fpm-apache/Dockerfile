@@ -404,6 +404,13 @@ RUN printf "\n" | pecl install apcu
 RUN docker-php-ext-enable apcu
 RUN pecl clear-cache
 
+# Install php gnupg
+RUN set -eux; \
+	apt-get update && apt-get install -y --no-install-recommends libgpgme11-dev
+RUN printf "\n" | pecl install gnupg
+RUN docker-php-ext-enable gnupg
+RUN pecl clear-cache
+
 # Install new relic agent
 RUN curl -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/newrelic-php5-10.21.0.11-linux.tar.gz \
   && gzip -dc newrelic.tar.gz | tar xf - \
