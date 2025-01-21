@@ -334,7 +334,7 @@ RUN set -eux; \
 # https://github.com/php/php-src/blob/17baa87faddc2550def3ae7314236826bc1b1398/sapi/fpm/php-fpm.8.in#L163
 STOPSIGNAL SIGQUIT
 
-ENV DRUSH_VERSION 8.4.10
+ENV DRUSH_VERSION 8.5.0
 ENV DRUSH_LAUNCHER_VERSION 0.10.1
 ENV DRUSH_LAUNCHER_FALLBACK "/usr/local/drush/drush"
 ENV MEMCACHED_VERSION 3.1.5
