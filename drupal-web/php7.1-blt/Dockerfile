@@ -9,7 +9,7 @@ ENV DRUSH_LAUNCHER_FALLBACK "/usr/local/drush/drush"
 # Install necessary packages and PHP extensions for both Drupal 7 and 8
 # Drupal 7 PHP requirement: https://www.drupal.org/docs/7/system-requirements/drupal-7-php-requirements#extensions
 # Drupal 8 PHP requirement: https://www.drupal.org/docs/8/system-requirements/php-requirements
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
   && apt-get update && apt-get install -y --no-install-recommends \
       mysql-client \
       libpng-dev \

@@ -1,10 +1,10 @@
-From node:12-slim
+FROM node:22-slim
 
 LABEL maintainer=stevenl@ciandt.com
 
 RUN npm install serverless -g --ignore-scripts spawn-sync
 
-User node
+USER node
 
 WORKDIR /home/node
 
