@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 # prevent Debian's PHP packages from being installed
 # https://github.com/docker-library/php/pull/542
@@ -405,11 +405,11 @@ RUN docker-php-ext-enable apcu
 RUN pecl clear-cache
 
 # Install new relic agent
-RUN curl -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/newrelic-php5-11.4.0.17-linux.tar.gz \
+RUN curl -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/newrelic-php5-12.2.0.27-linux.tar.gz \
   && gzip -dc newrelic.tar.gz | tar xf - \
-  && cd newrelic-php5-11.4.0.17-linux \
+  && cd newrelic-php5-12.2.0.27-linux \
   && NR_INSTALL_USE_CP_NOT_LN=1 NR_INSTALL_SILENT=1 ./newrelic-install install \
-  && rm -rf ../newrelic-php5-11.4.0.17-linux.tar.gz newrelic.tar.gz \
+  && rm -rf ../newrelic-php5-12.2.0.27-linux.tar.gz newrelic.tar.gz \
   && sed -i \
            -e 's/;newrelic.enabled =.*/newrelic.enabled = false/' \
            -e 's/;newrelic.daemon.dont_launch =.*/newrelic.daemon.dont_launch = 3/' \
@@ -424,6 +424,7 @@ RUN echo '#!/bin/bash\nset -e\n\
 [[ $(id -g docker) != ${CURRENT_USER_GID:-1001} ]] && groupmod -g ${CURRENT_USER_GID:-1001} docker\n\
 chown -R docker:docker /var/www/html\n\
 nohup rsyslogd -n -f /etc/rsyslog.conf &\n\
+update-ca-certificates \n\
 service exim4 start\n\
 php-fpm -D\n\
 apache2-foreground' > /start.sh && chmod 755 /start.sh \
