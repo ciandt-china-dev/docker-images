@@ -2,6 +2,7 @@
 Extend support for Drupal build based on official composer docker image
 
 ## Supported tags and respective `Dockerfile` links
+-	[`8.4` (*Dockerfile*)](https://github.com/ciandt-china-dev/docker-images/blob/master/drupal-composer/php8.4/Dockerfile)
 -	[`alpine` (*Dockerfile*)](https://github.com/ciandt-china-dev/docker-drupal-composer/blob/master/alpine/Dockerfile)
 
 ## The purpose of this container image
