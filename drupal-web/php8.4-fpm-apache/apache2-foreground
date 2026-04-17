@@ -1,0 +1,32 @@
+#!/bin/bash
+set -e
+
+: "${APACHE_CONFDIR:=/etc/apache2}"
+: "${APACHE_ENVVARS:=$APACHE_CONFDIR/envvars}"
+if [ -f "$APACHE_ENVVARS" ]; then
+    . "$APACHE_ENVVARS"
+fi
+
+: "${APACHE_RUN_DIR:=/var/run/apache2}"
+: "${APACHE_PID_FILE:=$APACHE_RUN_DIR/apache2.pid}"
+rm -f "$APACHE_PID_FILE"
+
+for e in "${!APACHE_@}"; do
+    if [[ "$e" == *_DIR ]] && [[ "${!e}" == /* ]]; then
+        dir="${!e}"
+        while [ "$dir" != "$(dirname "$dir")" ]; do
+            dir="$(dirname "$dir")"
+            if [ -d "$dir" ]; then
+                break
+            fi
+            abs_dir="$(readlink -f "$dir" 2>/dev/null || :)"
+            if [ -n "$abs_dir" ]; then
+                mkdir -p "$abs_dir"
+            fi
+        done
+
+        mkdir -p "${!e}"
+    fi
+done
+
+exec apache2 -DFOREGROUND "$@"
