@@ -42,8 +42,8 @@ RUN set -eux; \
         zip; \
     yes '' | pecl install apcu memcached imagick; \
     docker-php-ext-enable apcu memcached imagick; \
-    a2dismod mpm_prefork; \
-    a2enmod mpm_event proxy proxy_fcgi proxy_http rewrite; \
+    a2dismod mpm_event || true; \
+    a2enmod mpm_prefork proxy proxy_fcgi proxy_http rewrite; \
     sed -ri 's!^([[:space:]]*)DocumentRoot .+!\1DocumentRoot /var/www/html/docroot!' /etc/apache2/sites-available/000-default.conf; \
     sed -ri 's!^user = .+!user = docker!; s!^group = .+!group = docker!' /usr/local/etc/php-fpm.d/www.conf; \
     groupadd -g 1001 docker; \
