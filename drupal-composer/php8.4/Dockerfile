@@ -1,10 +1,12 @@
-FROM php:8.4-cli-alpine
+FROM php:8.4.20-cli-alpine
 
 LABEL maintainer="jason@ciandt.com"
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 RUN apk upgrade --update && apk add --no-cache \
+      git \
+      openssh-client \
       icu-dev \
       libjpeg-turbo-dev \
       libpng-dev \
